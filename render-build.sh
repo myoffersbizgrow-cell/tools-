@@ -1,22 +1,53 @@
 #!/usr/bin/env bash
 set -o errexit
 
-echo "📦 Setting up..."
+echo "📦 Setting up Java and Python..."
 
-# ✅ Render build environment ke hisaab se Java download
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+# ✅ Create tools directory
+mkdir -p tools
+
+# ✅ Download and install Java (OpenJDK 17)
+echo "☕ Downloading Java..."
+cd /tmp
+wget -q https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.12_7.tar.gz
+tar -xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.12_7.tar.gz
+mkdir -p /opt/java
+mv jdk-17.0.12+7 /opt/java/
+export JAVA_HOME=/opt/java/jdk-17.0.12+7
 export PATH=$JAVA_HOME/bin:$PATH
 
-# ✅ Pre-installed Java use karein
-if command -v java &> /dev/null; then
-    echo "✅ Java already installed!"
-    java -version
-else
-    echo "⚠️ Java not found. Using system default..."
-fi
+# ✅ Verify Java
+echo "✅ Java version:"
+java -version
 
-# ✅ Python dependencies install
+# ✅ Download Android tools
+echo "🔧 Downloading Android tools..."
+cd $HOME/project/src
+
+# APKTool
+wget -q -O tools/apktool.jar https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/windows/apktool.bat
+
+# Bundletool
+wget -q -O tools/bundletool.jar https://github.com/google/bundletool/releases/download/1.16.1/bundletool-all-1.16.1.jar
+
+# Android.jar
+wget -q -O tools/android.jar https://github.com/airwire/android-platforms/raw/main/android-33.jar
+
+# AAPT2
+wget -q -O tools/aapt2.zip https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2/7.1.0-7984345/aapt2-7.1.0-7984345-linux.zip
+cd tools
+unzip -q aapt2.zip
+chmod +x aapt2
+rm aapt2.zip
+cd ..
+
+# ✅ Verify tools
+echo "✅ Tools downloaded:"
+ls -la tools/
+
+# ✅ Install Python dependencies
+echo "📦 Installing Python dependencies..."
 pip3 install --upgrade pip
 pip3 install -r requirements.txt
 
-echo "✅ Done!"
+echo "✅ Build completed!"
