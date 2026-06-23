@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "apk-converter",
   "version": "1.0.0",
   "scripts": {
