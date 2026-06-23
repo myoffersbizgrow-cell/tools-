@@ -19,7 +19,7 @@ cd ..
 echo "✅ Java version:"
 java -version
 
-# ✅ Tools already in repo
+# ✅ Tools already in repo - no download needed
 echo "✅ Tools already present:"
 ls -la tools/
 
